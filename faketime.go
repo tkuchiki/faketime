@@ -3,7 +3,7 @@ package faketime
 import (
 	"time"
 
-	"github.com/bouk/monkey"
+	"bou.ke/monkey"
 )
 
 type faketime struct {
