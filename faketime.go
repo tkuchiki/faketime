@@ -16,6 +16,7 @@ type faketime struct {
 	sec      int
 	nsec     int
 	loc      *time.Location
+	time     time.Time
 }
 
 func NewFaketime(year int, month time.Month, day, hour, min, sec, nsec int, loc *time.Location) *faketime {
@@ -31,9 +32,19 @@ func NewFaketime(year int, month time.Month, day, hour, min, sec, nsec int, loc 
 	}
 }
 
+func NewFaketimeWithTime(t time.Time) *faketime {
+	return &faketime{
+		time: t,
+	}
+}
+
 func (f *faketime) Do() {
 	f.nowPatch = monkey.Patch(time.Now, func() time.Time {
-		return time.Date(f.year, f.month, f.day, f.hour, f.min, f.sec, f.nsec, f.loc)
+		if f.time.IsZero() {
+			return time.Date(f.year, f.month, f.day, f.hour, f.min, f.sec, f.nsec, f.loc)
+		}
+
+		return f.time
 	})
 }
 
